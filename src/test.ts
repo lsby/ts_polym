@@ -5,17 +5,14 @@ import { 判定实现, 生成实现, 生成实现提供者, 计算返回类型, 
 interface Show<A> {
   Number: 检查<[A extends number ? true : 错误<['期待', A, '是', 'number']>], string>
   String: 检查<[A extends string ? true : 错误<['期待', A, '是', 'string']>], string>
-  Array: 检查<
-    [
-      取构造子<A> extends λ<'Array'> ? true : 错误<['期待', A, '是', 'Array']>,
-      取参数1<A> extends infer a1
-        ? 判定实现<Show<a1>> extends true
-          ? true
-          : 错误<['期待', a1, '实现', 'Show']>
-        : 错误<['解构失败', A]>,
-    ],
-    string
-  >
+  // 自引用时不能用检查函数, 因为检查函数不会短路运算, 会出现无限引用.
+  Array: 取构造子<A> extends λ<'Array'>
+    ? 取参数1<A> extends infer a1
+      ? 判定实现<Show<a1>> extends true
+        ? string
+        : 错误<['期待', a1, '实现', 'Show']>
+      : 错误<['解构失败', A]>
+    : 错误<['期待', A, '是', 'Array']>
 }
 var show实现池: any[] = []
 var 提供show实现 = 生成实现提供者(show实现池)
