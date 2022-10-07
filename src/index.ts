@@ -2,13 +2,13 @@ import * as TF from '@lsby/ts_type_fun'
 import { 取对象第一个键值, 取数组第一个, 联合转元组 } from '@lsby/ts_type_fun'
 
 type 分解重载<T> = 联合转元组<{ [P in keyof T as string]: { key: P; value: T[P] } }['string']>
-type 选择分组<arr, 非错误 extends any[] = [], 错误 extends any[] = []> = arr extends []
+type 选择分组<arr, 非错误 extends {} = {}, 错误 extends {} = {}> = arr extends []
   ? { 非错误: 非错误; 错误: 错误 }
   : arr extends [{ key: infer key; value: infer value }, ...infer as]
   ? key extends string
     ? value extends TF.错误<any>
-      ? 选择分组<as, 非错误, [...错误, { [p in key]: value }]>
-      : 选择分组<as, [...非错误, { [p in key]: value }], 错误>
+      ? 选择分组<as, 非错误, 错误 & { [p in key]: value }>
+      : 选择分组<as, 非错误 & { [p in key]: value }, 错误>
     : TF.错误<['key不是字符串', key]>
   : TF.错误<['输入不正确', arr]>
 export type 计算返回类型<A> = 选择分组<分解重载<A>> extends {
