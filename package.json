@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsc",
     "test": "npm run build && node dist/test.js",
+    "pub": "npm publish --access=public",
     "format:all": "prettier --write .",
     "prepare": "husky install"
   },
