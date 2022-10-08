@@ -99,6 +99,8 @@ function add(a: any, b: any) {
 当然, 通过一些简单的奇技淫巧, 这个问题很容易绕过去.
 
 ```typescript
+const 跳过: unique symbol = Symbol()
+
 interface add {}
 var add实现池: any[] = []
 
